@@ -2,6 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Train, Home, Map } from 'lucide-react';
 
+import travelBg from '../assets/travel-bg.jpg';
+
 export default function Travel() {
     const fadeInUp = {
         initial: { opacity: 0, y: 30 },
@@ -11,8 +13,15 @@ export default function Travel() {
     };
 
     return (
-        <section className="info-section" style={{ backgroundColor: 'var(--color-secondary)' }}>
-            <div className="info-container">
+        <section className="info-section" style={{
+            backgroundImage: `url(${travelBg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            position: 'relative'
+        }}>
+            {/* Overlay for better readability of the white cards against detailed background */}
+            <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.1)', zIndex: 0 }}></div>
+            <div className="info-container" style={{ position: 'relative', zIndex: 1 }}>
                 <motion.h2 {...fadeInUp} className="info-title">Anreise & Unterkunft</motion.h2>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>

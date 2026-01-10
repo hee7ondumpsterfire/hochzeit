@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Clock, MapPin, Wine, Coffee, Heart, Utensils } from 'lucide-react';
+import { Clock, Wine, Coffee, Heart, Utensils } from 'lucide-react';
 import './InfoSection.css';
 
 export default function InfoSection() {
@@ -50,14 +50,7 @@ export default function InfoSection() {
 
 
 
-                <motion.div {...fadeInUp} className="location-details">
-                    <MapPin className="w-8 h-8 text-primary mx-auto mb-4" />
-                    <h3 className="text-2xl font-serif mb-2">Am Peterborn 2</h3>
-                    <p className="text-text-light mb-4">99428 Nohra, Deutschland</p>
-                    <a href="https://maps.google.com/?q=Am+Peterborn+2,+99428+Nohra,+Deutschland" target="_blank" rel="noopener noreferrer" className="btn-primary">
-                        Karte anzeigen
-                    </a>
-                </motion.div>
+
             </div>
         </section>
     );
