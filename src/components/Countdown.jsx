@@ -13,8 +13,6 @@ export default function Countdown() {
             timeLeft = {
                 Tage: Math.floor(difference / (1000 * 60 * 60 * 24)),
                 Std: Math.floor((difference / (1000 * 60 * 60)) % 24),
-                Min: Math.floor((difference / 1000 / 60) % 60),
-                Sek: Math.floor((difference / 1000) % 60),
             };
         }
         return timeLeft;
