@@ -12,6 +12,7 @@ export default function Rsvp() {
 
     const [formData, setFormData] = useState({
         name: '',
+        email: '',
         attending: 'yes',
         hasPlusOne: 'no',
         plusOneName: '',
@@ -196,6 +197,22 @@ export default function Rsvp() {
                             onChange={handleChange}
                             placeholder="Vorname Nachname"
                         />
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label">E-Mail Adresse</label>
+                        <input
+                            type="email"
+                            name="email"
+                            required
+                            className="form-input"
+                            value={formData.email}
+                            onChange={handleChange}
+                            placeholder="deine@email.de"
+                        />
+                        <p style={{ fontSize: '0.8rem', color: '#666', marginTop: '0.25rem' }}>
+                            Für Neuigkeiten und selbstverständlich auch Werbezwecke.
+                        </p>
                     </div>
 
                     <div className="form-group">
