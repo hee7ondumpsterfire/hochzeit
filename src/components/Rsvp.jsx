@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Check, AlertCircle } from 'lucide-react';
 // import { guests } from '../data/guests'; // Removed for security
+import rsvpBg from '../assets/rsvp-bg.jpg';
 import './Rsvp.css';
 
 export default function Rsvp() {
@@ -154,8 +155,16 @@ export default function Rsvp() {
     }
 
     return (
-        <section id="rsvp" className="rsvp-section">
+        <section id="rsvp" className="rsvp-section" style={{
+            backgroundImage: `url(${rsvpBg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            position: 'relative',
+            padding: '4rem 1rem'
+        }}>
+            <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.7)', zIndex: 0 }}></div>
             <motion.div
+                style={{ position: 'relative', zIndex: 1 }}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
