@@ -7,6 +7,7 @@ export default function Admin() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [password, setPassword] = useState('');
     const [rsvpData, setRsvpData] = useState([]);
+    const [allowedGuests, setAllowedGuests] = useState([]); // WHITELIST
     const [showForm, setShowForm] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
@@ -23,12 +24,21 @@ export default function Admin() {
 
     useEffect(() => {
         if (isAuthenticated) {
+            // Fetch RSVPs
             fetch('/api/rsvp')
                 .then(res => res.json())
                 .then(data => {
                     if (Array.isArray(data)) setRsvpData(data);
                 })
                 .catch(err => console.error('Failed to load RSVPs', err));
+
+            // Fetch Allowed Guests
+            fetch('/api/guests')
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data)) setAllowedGuests(data);
+                })
+                .catch(err => console.error('Failed to load Guests', err));
         }
     }, [isAuthenticated]);
 
@@ -216,6 +226,65 @@ export default function Admin() {
                     <button onClick={handleSave} className="btn-primary mt-4">Speichern</button>
                 </div>
             )}
+
+            {/* WHITELIST MANAGEMENT */}
+            <div className="bg-white p-6 rounded-lg shadow-md mb-8">
+                <h3 className="text-xl mb-4 font-bold flex items-center gap-2">
+                    <Database size={20} />
+                    Gästeliste verwalten (Whitelist)
+                </h3>
+                <p className="text-sm text-gray-500 mb-4">Nur Namen, die hier stehen, können sich anmelden.</p>
+
+                <div className="flex gap-2 mb-6">
+                    <input
+                        className="form-input"
+                        placeholder="Neuer Gast (Vorname Nachname)"
+                        id="newGuestInput"
+                    />
+                    <button
+                        className="btn-primary whitespace-nowrap"
+                        onClick={async () => {
+                            const input = document.getElementById('newGuestInput');
+                            const name = input.value;
+                            if (!name) return;
+
+                            try {
+                                await fetch('/api/guests', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ name })
+                                });
+                                input.value = '';
+                                // Refresh list
+                                const res = await fetch('/api/guests');
+                                const data = await res.json();
+                                setAllowedGuests(data);
+                            } catch (e) {
+                                alert('Fehler beim Hinzufügen');
+                            }
+                        }}
+                    >Hinzufügen</button>
+                </div>
+
+                <div className="max-h-60 overflow-y-auto border rounded p-2">
+                    {allowedGuests.map(g => (
+                        <div key={g.id} className="flex justify-between items-center p-2 hover:bg-gray-50 border-b last:border-0">
+                            <span>{g.name}</span>
+                            <button
+                                onClick={async () => {
+                                    if (!window.confirm('Löschen?')) return;
+                                    await fetch(`/api/guests?id=${g.id}`, { method: 'DELETE' });
+                                    setAllowedGuests(allowedGuests.filter(i => i.id !== g.id));
+                                }}
+                                className="text-red-500 text-sm hover:underline"
+                            >
+                                Entfernen
+                            </button>
+                        </div>
+                    ))}
+                    {allowedGuests.length === 0 && <p className="text-center text-gray-400">Noch keine Gäste auf der Liste.</p>}
+                </div>
+            </div>
 
             <div className="stats-grid">
                 <div className="stat-card">
