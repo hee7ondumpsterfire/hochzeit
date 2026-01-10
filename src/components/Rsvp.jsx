@@ -104,7 +104,48 @@ export default function Rsvp() {
                         <h3 className="rsvp-title">Vielen Dank!</h3>
                         <p style={{ marginBottom: '1rem' }}>Deine Antwort wurde empfangen.</p>
                         {formData.attending === 'yes' && (
-                            <p className="text-sm text-gray-500">Wir freuen uns auf euch!</p>
+                            <>
+                                <p className="text-sm text-gray-500 mb-4">Wir freuen uns auf euch!</p>
+                                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1rem' }}>
+                                    <a
+                                        href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Hochzeit+von+Julia+%26+Max&dates=20260926T113000Z/20260926T220000Z&details=Wir+freuen+uns+auf+euch!&location=Am+Peterborn+2,+99428+Nohra,+Deutschland&sf=true&output=xml"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="btn-secondary"
+                                        style={{ fontSize: '0.8rem', padding: '0.5rem 1rem' }}
+                                    >
+                                        Google Kalender
+                                    </a>
+                                    <button
+                                        onClick={() => {
+                                            const event = [
+                                                'BEGIN:VCALENDAR',
+                                                'VERSION:2.0',
+                                                'BEGIN:VEVENT',
+                                                'URL:http://www.julia-und-max.com',
+                                                'DTSTART:20260926T113000Z',
+                                                'DTEND:20260926T230000Z',
+                                                'SUMMARY:Hochzeit von Julia & Max',
+                                                'DESCRIPTION:Wir freuen uns auf euch!',
+                                                'LOCATION:Am Peterborn 2, 99428 Nohra, Deutschland',
+                                                'END:VEVENT',
+                                                'END:VCALENDAR',
+                                            ].join('\n');
+                                            const blob = new Blob([event], { type: 'text/calendar;charset=utf-8' });
+                                            const link = document.createElement('a');
+                                            link.href = window.URL.createObjectURL(blob);
+                                            link.setAttribute('download', 'Hochzeit-Julia-und-Max.ics');
+                                            document.body.appendChild(link);
+                                            link.click();
+                                            document.body.removeChild(link);
+                                        }}
+                                        className="btn-secondary"
+                                        style={{ fontSize: '0.8rem', padding: '0.5rem 1rem' }}
+                                    >
+                                        Outlook / Apple (.ics)
+                                    </button>
+                                </div>
+                            </>
                         )}
                     </div>
                 </motion.div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Clock, MapPin, Wine, Calendar, Download, Coffee, Heart, Utensils } from 'lucide-react';
+import { Clock, MapPin, Wine, Coffee, Heart, Utensils } from 'lucide-react';
 import './InfoSection.css';
 
 export default function InfoSection() {
@@ -11,31 +11,7 @@ export default function InfoSection() {
         transition: { duration: 0.6 }
     };
 
-    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Hochzeit+von+Julia+%26+Max&dates=20260926T113000Z/20260926T220000Z&details=Wir+freuen+uns+auf+euch!&location=Am+Peterborn+2,+99428+Nohra,+Deutschland&sf=true&output=xml`;
 
-    const downloadIcs = () => {
-        const event = [
-            'BEGIN:VCALENDAR',
-            'VERSION:2.0',
-            'BEGIN:VEVENT',
-            'URL:http://www.julia-und-max.com',
-            'DTSTART:20260926T113000Z',
-            'DTEND:20260926T230000Z',
-            'SUMMARY:Hochzeit von Julia & Max',
-            'DESCRIPTION:Wir freuen uns auf euch!',
-            'LOCATION:Am Peterborn 2, 99428 Nohra, Deutschland',
-            'END:VEVENT',
-            'END:VCALENDAR',
-        ].join('\n');
-
-        const blob = new Blob([event], { type: 'text/calendar;charset=utf-8' });
-        const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
-        link.setAttribute('download', 'Hochzeit-Julia-und-Max.ics');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
 
     return (
         <section className="info-section">
@@ -72,16 +48,7 @@ export default function InfoSection() {
                     </motion.div>
                 </div>
 
-                <motion.div {...fadeInUp} className="calendar-buttons">
-                    <a href={googleCalendarUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary">
-                        <Calendar className="w-4 h-4 mr-2" />
-                        Google Kalender
-                    </a>
-                    <button onClick={downloadIcs} className="btn-secondary">
-                        <Download className="w-4 h-4 mr-2" />
-                        Outlook / Apple (.ics)
-                    </button>
-                </motion.div>
+
 
                 <motion.div {...fadeInUp} className="location-details">
                     <MapPin className="w-8 h-8 text-primary mx-auto mb-4" />

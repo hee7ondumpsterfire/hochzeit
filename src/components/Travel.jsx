@@ -45,6 +45,7 @@ export default function Travel() {
                                     </a>
                                 </strong><br />
                                 Direkt vor Ort.<br />
+                                (2-6 Personen, Selbstverpflegung, Saunamöglichkeit)<br />
                                 <span style={{ fontSize: '0.9rem', opacity: 0.8 }}>Begrenzte Verfügbarkeit.</span>
                             </li>
                             <li style={{ marginBottom: '1rem' }}>
@@ -59,7 +60,19 @@ export default function Travel() {
                     </motion.div>
 
                 </div>
+
+                <div style={{ marginTop: '3rem', textAlign: 'center' }}>
+                    <a
+                        href="https://maps.google.com/?q=Am+Peterborn+2,+99428+Nohra,+Deutschland"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-primary"
+                    >
+                        <Map className="w-4 h-4 mr-2" />
+                        Google Maps Route
+                    </a>
+                </div>
             </div>
-        </section>
+        </section >
     );
 }
