@@ -15,7 +15,7 @@
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    background-color: var(--color-secondary);
+    background-color: #ffffff;
     /* or #000 to frame the photo */
 }
 
