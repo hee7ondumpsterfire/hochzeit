@@ -21,19 +21,33 @@ export default function Admin() {
     });
 
     useEffect(() => {
-        // Load simulated DB
-        const saved = localStorage.getItem('rsvp_db');
-        if (saved) {
-            setRsvpData(JSON.parse(saved));
+        if (isAuthenticated) {
+            fetch('/api/rsvp')
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data)) setRsvpData(data);
+                })
+                .catch(err => console.error('Failed to load RSVPs', err));
         }
-    }, []);
+    }, [isAuthenticated]);
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        if (password === 'hochzeit2026') {
-            setIsAuthenticated(true);
-        } else {
-            alert('Falsches Passwort!');
+        try {
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password, type: 'admin' })
+            });
+            const data = await res.json();
+            if (res.ok && data.success) {
+                setIsAuthenticated(true);
+            } else {
+                alert('Falsches Passwort');
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Login Error: Backend unerreichbar. Bitte "vercel dev" nutzen.');
         }
     };
 
@@ -68,7 +82,7 @@ export default function Admin() {
 
 
 
-    const handleSave = () => {
+    const handleSave = async () => {
         // Basic validation
         if (!formData.name) return alert('Name ist erforderlich');
 
@@ -80,14 +94,26 @@ export default function Admin() {
                 + (formData.bringingKids === 'yes' ? formData.kids.filter(k => k).length : 0)
         };
 
-        const updatedDb = [...rsvpData.filter(r => r.name !== formData.name), newEntry];
-        setRsvpData(updatedDb);
-        localStorage.setItem('rsvp_db', JSON.stringify(updatedDb));
-        setShowForm(false);
-        setFormData({
-            name: '', attending: 'yes', hasPlusOne: 'no', plusOneName: '',
-            bringingKids: 'no', kids: ['', '', ''], lodging: 'no', dietary: '', note: ''
-        });
+        try {
+            await fetch('/api/rsvp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newEntry)
+            });
+
+            // Reload
+            const res = await fetch('/api/rsvp');
+            const data = await res.json();
+            setRsvpData(data);
+
+            setShowForm(false);
+            setFormData({
+                name: '', attending: 'yes', hasPlusOne: 'no', plusOneName: '',
+                bringingKids: 'no', kids: ['', '', ''], lodging: 'no', dietary: '', note: ''
+            });
+        } catch (e) {
+            alert('Speichern fehlgeschlagen');
+        }
     };
 
     const handleEdit = (row) => {
@@ -95,13 +121,15 @@ export default function Admin() {
         setShowForm(true);
     };
 
-    const handleDelete = (name) => {
+    const handleDelete = async (name) => {
         // Force synchronous confirm
         const confirmed = window.confirm(`Möchtest du den Eintrag von "${name}" wirklich unwiderruflich löschen?`);
         if (confirmed) {
-            const updatedDb = rsvpData.filter(r => r.name !== name);
-            setRsvpData(updatedDb);
-            localStorage.setItem('rsvp_db', JSON.stringify(updatedDb));
+            await fetch(`/api/rsvp?name=${encodeURIComponent(name)}`, { method: 'DELETE' });
+            // Reload
+            const res = await fetch('/api/rsvp');
+            const data = await res.json();
+            if (Array.isArray(data)) setRsvpData(data);
         }
     };
 

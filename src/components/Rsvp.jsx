@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Check, AlertCircle } from 'lucide-react';
-import { guests } from '../data/guests';
+// import { guests } from '../data/guests'; // Removed for security
 import './Rsvp.css';
 
 export default function Rsvp() {
@@ -45,36 +45,48 @@ export default function Rsvp() {
         setFormData(prev => ({ ...prev, kids: newKids }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // 1. Validate Name
-        const foundGuest = guests.find(g => normalize(g.name) === normalize(formData.name));
+        // 1. Validate Name via API
+        try {
+            const checkRes = await fetch(`/api/guest-check?name=${encodeURIComponent(formData.name)}`);
+            if (!checkRes.ok) throw new Error('API Error');
+            const checkData = await checkRes.json();
 
-        if (!foundGuest) {
-            setError('Entschuldigung, dieser Name steht nicht auf der Gästeliste. Bitte überprüfen Sie die Schreibweise oder kontaktieren Sie uns.');
-            return;
+            if (!checkData.valid) {
+                setError('Entschuldigung, dieser Name steht nicht auf der Gästeliste (oder API nicht erreichbar).');
+                return;
+            }
+
+            // 2. Save to "Database" via API
+            const kidCount = formData.bringingKids === 'yes' ? formData.kids.filter(k => k.trim() !== '').length : 0;
+            const totalCount = 1 + (formData.hasPlusOne === 'yes' ? 1 : 0) + kidCount;
+
+            const newEntry = {
+                ...formData,
+                guestCount: totalCount,
+                timestamp: new Date().toISOString()
+            };
+
+            const saveRes = await fetch('/api/rsvp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newEntry)
+            });
+
+            if (saveRes.ok) {
+                setMatchedGuest(checkData.guest);
+                setTimeout(() => setSubmitted(true), 1000);
+            } else {
+                setError('Fehler beim Speichern. Bitte versuche es später.');
+            }
+
+        } catch (err) {
+            console.error(err);
+            // Fallback for purely local dev without Vercel logic (OPTIONAL: Enable simple success for testing UI)
+            setError('Fehler: Backend nicht erreichbar. Bitte nutze "vercel dev".');
         }
-
-        // 2. Save to "Database" (LocalStorage)
-        // Calculate total count for admin info
-        const kidCount = formData.bringingKids === 'yes' ? formData.kids.filter(k => k.trim() !== '').length : 0;
-        const totalCount = 1 + (formData.hasPlusOne === 'yes' ? 1 : 0) + kidCount;
-
-        const newEntry = {
-            ...formData,
-            guestCount: totalCount, // Computed for backward compatibility/admin view
-            timestamp: new Date().toISOString()
-        };
-
-        const currentDb = JSON.parse(localStorage.getItem('rsvp_db') || '[]');
-        const updatedDb = currentDb.filter(entry => normalize(entry.name) !== normalize(formData.name));
-        updatedDb.push(newEntry);
-
-        localStorage.setItem('rsvp_db', JSON.stringify(updatedDb));
-
-        setMatchedGuest(foundGuest);
-        setTimeout(() => setSubmitted(true), 1000);
     };
 
     if (submitted) {
@@ -109,7 +121,7 @@ export default function Rsvp() {
                 transition={{ duration: 0.6 }}
                 className="rsvp-card"
             >
-                <h2 className="rsvp-title">U.A.w.g.</h2>
+                <h2 className="rsvp-title">Anmeldung - Wir freuen uns auf Euch</h2>
 
                 {error && (
                     <motion.div
