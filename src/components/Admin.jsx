@@ -10,6 +10,7 @@ export default function Admin() {
     const [showForm, setShowForm] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
+        email: '',
         attending: 'yes',
         hasPlusOne: 'no',
         plusOneName: '',
@@ -108,7 +109,7 @@ export default function Admin() {
 
             setShowForm(false);
             setFormData({
-                name: '', attending: 'yes', hasPlusOne: 'no', plusOneName: '',
+                name: '', email: '', attending: 'yes', hasPlusOne: 'no', plusOneName: '',
                 bringingKids: 'no', kids: ['', '', ''], lodging: 'no', dietary: '', note: ''
             });
         } catch (e) {
@@ -171,6 +172,12 @@ export default function Admin() {
                             value={formData.name}
                             onChange={e => setFormData({ ...formData, name: e.target.value })}
                         />
+                        <input
+                            placeholder="E-Mail"
+                            className="form-input"
+                            value={formData.email}
+                            onChange={e => setFormData({ ...formData, email: e.target.value })}
+                        />
                         <select
                             className="form-input"
                             value={formData.attending}
@@ -230,6 +237,7 @@ export default function Admin() {
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Email</th>
                             <th>Status</th>
                             <th>Begleitung</th>
                             <th>Kinder</th>
@@ -246,6 +254,7 @@ export default function Admin() {
                             [...rsvpData].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).map((row, i) => (
                                 <tr key={i}>
                                     <td className="font-bold">{row.name}</td>
+                                    <td className="text-sm">{row.email || '-'}</td>
                                     <td>
                                         {row.attending === 'yes' ?
                                             <span className="badge badge-success">Zusage</span> :

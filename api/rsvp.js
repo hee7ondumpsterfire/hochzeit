@@ -33,6 +33,7 @@ export default async function handler(req, res) {
         try {
             await sql`CREATE TABLE IF NOT EXISTS rsvps (
             name varchar(255) PRIMARY KEY,
+            email text,
             attending varchar(50),
             hasPlusOne varchar(50),
             plusOneName varchar(255),
@@ -45,11 +46,20 @@ export default async function handler(req, res) {
             guestCount int
          );`;
 
+            // Ensure column exists for existing tables
+            try {
+                await sql`ALTER TABLE rsvps ADD COLUMN IF NOT EXISTS email TEXT;`;
+            } catch (e) {
+                // Ignore error if column exists or not supported in this context
+                console.log('Migration note:', e.message);
+            }
+
             // Upsert
             await sql`
-            INSERT INTO rsvps (name, attending, hasPlusOne, plusOneName, bringingKids, kids, lodging, dietary, note, timestamp, guestCount)
-            VALUES (${data.name}, ${data.attending}, ${data.hasPlusOne}, ${data.plusOneName}, ${data.bringingKids}, ${data.kids}, ${data.lodging}, ${data.dietary}, ${data.note}, ${data.timestamp}, ${data.guestCount})
+            INSERT INTO rsvps (name, email, attending, hasPlusOne, plusOneName, bringingKids, kids, lodging, dietary, note, timestamp, guestCount)
+            VALUES (${data.name}, ${data.email}, ${data.attending}, ${data.hasPlusOne}, ${data.plusOneName}, ${data.bringingKids}, ${data.kids}, ${data.lodging}, ${data.dietary}, ${data.note}, ${data.timestamp}, ${data.guestCount})
             ON CONFLICT (name) DO UPDATE SET
+            email = EXCLUDED.email,
             attending = EXCLUDED.attending,
             hasPlusOne = EXCLUDED.hasPlusOne,
             plusOneName = EXCLUDED.plusOneName,
