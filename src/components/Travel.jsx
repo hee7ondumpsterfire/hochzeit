@@ -30,11 +30,13 @@ export default function Travel() {
                         <Train className="w-8 h-8 text-accent mb-4" />
                         <h3 className="text-xl font-serif mb-3">Anreise</h3>
                         <p className="text-text-light mb-4">
+                            <strong>Location - Land Alm Utzberg</strong>
+                            <br />
                             Nohra liegt günstig zwischen Weimar und Erfurt.
                             <br /><br />
                             <strong>Bahn:</strong> Bis Weimar Hbf oder Erfurt Hbf. Von dort mit dem Taxi (ca. 15 Min).
                             <br />
-                            <strong>Auto:</strong> A4 Abfahrt Nohra.
+                            <strong>Auto:</strong> A4 Abfahrt Nohra. Es sind ausreichend Parkplätze vorhanden.
                         </p>
                     </motion.div>
 
