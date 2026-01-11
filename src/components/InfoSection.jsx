@@ -22,8 +22,8 @@ export default function InfoSection() {
                     <motion.div {...fadeInUp} className="timeline-item">
                         <Wine className="w-8 h-8 text-accent mb-2" />
                         <span className="timeline-time">13:30</span>
-                        <h3 className="timeline-event">Ankunft & Aperitivo</h3>
-                        <p className="timeline-desc">Empfang der Gäste mit Drinks & Snacks.</p>
+                        <h3 className="timeline-event">Ankunft & Begrüssung</h3>
+                        <p className="timeline-desc">Empfang der Gäste.</p>
                     </motion.div>
 
                     <div style={{ position: 'relative', marginTop: '2rem' }}>
