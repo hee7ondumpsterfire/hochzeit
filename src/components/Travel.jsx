@@ -55,7 +55,7 @@ export default function Travel() {
                                 </strong><br />
                                 Direkt vor Ort.<br />
                                 (2-6 Personen, Selbstverpflegung, Saunamöglichkeit)<br />
-                                <span style={{ fontSize: '0.9rem', opacity: 0.8 }}>Begrenzte Verfügbarkeit.</span>
+                                <span style={{ fontSize: '0.9rem', opacity: 0.8 }}>Von Samstag auf Sonntag möglich. Begrenzte Verfügbarkeit.</span>
                             </li>
                             <li style={{ marginBottom: '1rem' }}>
                                 <strong>Hotel K1 Nohra</strong><br />
