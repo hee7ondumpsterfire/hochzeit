@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Lock, ArrowRight } from 'lucide-react';
-import heroImg from '../assets/hero-v2.jpg';
+import heroImg from '../assets/hero-v3.jpg';
 import './Hero.css';
 import Countdown from './Countdown';
 
