@@ -8,11 +8,13 @@ import Faq from './components/Faq';
 import Admin from './components/Admin';
 
 import PasswordProtection from './components/PasswordProtection';
+import Envelope from './components/Envelope';
 
 import { useState, useEffect } from 'react';
 
 function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showEnvelope, setShowEnvelope] = useState(true);
 
   useEffect(() => {
     const auth = localStorage.getItem('site_auth');
@@ -28,6 +30,8 @@ function Home() {
 
   return (
     <div style={{ backgroundColor: 'var(--color-secondary)', minHeight: '100vh' }}>
+      {showEnvelope && <Envelope onOpen={() => setShowEnvelope(false)} />}
+
       <Hero isLocked={!isAuthenticated} onUnlock={handleUnlock} />
       {isAuthenticated && (
         <>

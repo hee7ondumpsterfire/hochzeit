@@ -1,0 +1,198 @@
+.envelope-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #fbfbfb;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.envelope-container {
+    perspective: 1000px;
+    cursor: pointer;
+    transition: transform 0.8s ease-in-out;
+}
+
+.envelope {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    background-color: #e0c9a6;
+    /* Kraft paper color or creamy white */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease;
+}
+
+/* Back of envelope (the inside) */
+.envelope::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #d1b790;
+    transform: translateZ(-1px);
+}
+
+/* The Flap */
+.flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    border-top: 110px solid #e6d1b1;
+    /* Slightly lighter/different shade */
+    transform-origin: top;
+    transition: transform 0.6s 0.2s ease-in-out, z-index 0.2s 0.2s;
+    z-index: 5;
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.1));
+}
+
+.flap.open {
+    transform: rotateX(180deg);
+    z-index: 1;
+    /* Move behind the letter when open */
+}
+
+/* The Envelope Pockets (Left, Right, Bottom) */
+.pocket {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+    /* Let clicks pass through to the letter if needed */
+}
+
+.pocket-left {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 150px solid #e0c9a6;
+    border-top: 100px solid transparent;
+    border-bottom: 100px solid transparent;
+}
+
+.pocket-right {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-right: 150px solid #e0c9a6;
+    border-top: 100px solid transparent;
+    border-bottom: 100px solid transparent;
+}
+
+.pocket-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    border-bottom: 110px solid #dcbfa0;
+    z-index: 4;
+}
+
+/* The Wax Seal */
+.seal {
+    position: absolute;
+    top: 90px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    background: #8b1c1c;
+    /* Wax red */
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), inset 0 -2px 5px rgba(0, 0, 0, 0.3), inset 0 2px 5px rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e8b0b0;
+    font-family: serif;
+    font-weight: bold;
+    font-size: 1.2rem;
+    z-index: 10;
+    cursor: pointer;
+    border: 2px solid #7a1515;
+    transition: transform 0.2s ease, opacity 0.4s ease;
+}
+
+.seal:hover {
+    transform: translate(-50%, -50%) scale(1.05);
+}
+
+.seal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* The Letter/Content */
+.letter {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 280px;
+    height: 180px;
+    background: #fff;
+    padding: 1rem;
+    transition: transform 0.6s 0.6s ease-in-out;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.letter h2 {
+    font-family: serif;
+    color: #333;
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.letter p {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+/* Opening State */
+.envelope-container.open .envelope {
+    transform: translateY(100px);
+    /* Move down slightly as letter comes up */
+}
+
+.envelope-container.open .letter {
+    transform: translateY(-200px) scale(1.5);
+    /* Slide up out of envelope */
+    z-index: 10;
+}
+
+.envelope-overlay.vanish {
+    animation: fadeOut 1s forwards 1.2s;
+    /* Wait for letter to exit */
+    pointer-events: none;
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
